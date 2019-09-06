@@ -6,21 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlightInformationService.Controllers
 {
-    [Route("api/airports")]
+    [Route("api/v1/airlines")]
     [ApiController]
-    public class AirportController : ControllerBase
+    public class AirlinesController : ControllerBase
     {
         private readonly IFlightService flightService;
 
-        public AirportController(IFlightService flightService)
+        public AirlinesController (IFlightService flightService)
         {
             this.flightService = flightService;
         }
 
+        // GET api/values
         [HttpGet]
-        public async Task<ActionResult<List<Airport>>> GetAirports()
+        public async Task<ActionResult<List<Airline>>> GetAirlines()
         {
-            var routes = await flightService.GetAirports();
+            var routes = await flightService.GetAirlines();
 
             return routes;
         }

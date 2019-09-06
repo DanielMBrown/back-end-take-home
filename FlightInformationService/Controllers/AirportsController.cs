@@ -4,25 +4,23 @@ using FlightInformationService.Services;
 using GuestlogixBackendTest.Models;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace FlightInformationService.Controllers
 {
-    [Route("api/routes")]
+    [Route("api/v1/airports")]
     [ApiController]
-    public class RouteController : ControllerBase
+    public class AirportsController : ControllerBase
     {
-
         private readonly IFlightService flightService;
 
-        public RouteController(IFlightService flightService)
+        public AirportsController(IFlightService flightService)
         {
             this.flightService = flightService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Route>>> GetRoutes()
+        public async Task<ActionResult<List<Airport>>> GetAirports()
         {
-            var routes = await flightService.GetRoutes();
+            var routes = await flightService.GetAirports();
 
             return routes;
         }

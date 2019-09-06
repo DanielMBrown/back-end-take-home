@@ -7,9 +7,9 @@ namespace FlightInformationService.Services
 {
     public class FlightService : IFlightService
     {
-        private readonly DataService dataService;
+        private readonly IDataService dataService;
 
-        public FlightService(DataService dataService)
+        public FlightService(IDataService dataService)
         {
             this.dataService = dataService;
         }
@@ -27,6 +27,11 @@ namespace FlightInformationService.Services
         public async Task<List<Route>> GetRoutes()
         {
             return dataService.Routes;
+        }
+
+        public Task<Route> RouteFindShortestPath(string origin, string destination)
+        {
+            throw new NotImplementedException();
         }
     }
 }
