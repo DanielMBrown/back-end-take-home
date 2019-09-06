@@ -1,7 +1,5 @@
 ﻿using GeoCoordinatePortable;
 
-
-
 namespace GuestlogixBackendTest.Models
 {
     public class Airport
@@ -11,5 +9,5 @@ namespace GuestlogixBackendTest.Models
         public string Country { get; set; }
         public string IATADesignator { get; set; }
         public GeoCoordinate Location { get; set; }
-}
+    }
 }
