@@ -24,7 +24,7 @@ namespace FlightInformationService
             // Need to find a better approach to this, this feels dirty.
             var dataService = new DataService();
             dataService.LoadDataFromFile();
-            services.AddSingleton(dataService);
+            services.AddSingleton<IDataService>(dataService);
 
             services.AddTransient<IFlightService, FlightService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

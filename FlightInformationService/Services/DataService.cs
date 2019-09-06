@@ -1,13 +1,12 @@
 ﻿using CsvHelper;
 using GuestlogixBackendTest.Models;
-using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace FlightInformationService.Services
 {
-    public class DataService
+    public class DataService : IDataService
     {
         public List<Airline> Airlines { get; private set; } = new List<Airline>();
         public List<Airport> Airports { get; private set; } = new List<Airport>();
