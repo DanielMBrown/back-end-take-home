@@ -19,6 +19,13 @@ namespace FlightInformationService
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Create instance, and begin loading of data from file so the first request isn't slow.
+            // Need to find a better approach to this, this feels dirty.
+            var dataService = new DataService();
+            dataService.LoadDataFromFile();
+            services.AddSingleton(dataService);
+
             services.AddTransient<IFlightService, FlightService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSwaggerGen(c =>

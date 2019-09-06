@@ -7,25 +7,26 @@ namespace FlightInformationService.Services
 {
     public class FlightService : IFlightService
     {
+        private readonly DataService dataService;
 
-        public FlightService()
+        public FlightService(DataService dataService)
         {
-            // get a copy of a data service that reads in the csv files.
+            this.dataService = dataService;
         }
 
-        public Task<List<Airline>> GetAirlines()
+        public async Task<List<Airline>> GetAirlines()
         {
-            return default;
+            return dataService.Airlines;
         }
 
-        public Task<List<Airport>> GetAirports()
+        public async Task<List<Airport>> GetAirports()
         {
-            return default;
+            return dataService.Airports;
         }
 
-        public Task<List<Route>> GetRoutes()
+        public async Task<List<Route>> GetRoutes()
         {
-            return default;
+            return dataService.Routes;
         }
     }
 }
