@@ -21,7 +21,7 @@ namespace FlightInformationService
         {
 
             // Create instance, and begin loading of data from file so the first request isn't slow.
-            // Need to find a better approach to this, this feels dirty.
+            // Need to find a better approach to this, this feels dirty. Ideally load from a database, extra work though.
             var dataService = new DataService();
             dataService.LoadDataFromFile();
             services.AddSingleton<IDataService>(dataService);

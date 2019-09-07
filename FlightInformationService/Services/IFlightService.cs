@@ -9,6 +9,6 @@ namespace FlightInformationService.Services
         Task<List<Airline>> GetAirlines();
         Task<List<Airport>> GetAirports();
         Task<List<Route>> GetRoutes();
-        Task<Route> RouteFindShortestPath(string origin, string destination);
+        Task<List<string>> FindShortestPath(string origin, string destination);
     }
 }
