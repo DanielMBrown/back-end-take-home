@@ -6,9 +6,9 @@ namespace FlightInformationService.Services
 {
     public interface IFlightService
     {
-        Task<List<Airline>> GetAirlines();
-        Task<List<Airport>> GetAirports();
-        Task<List<Route>> GetRoutes();
-        Task<List<string>> FindShortestPath(string origin, string destination);
+        Task<List<Airline>> Airlines();
+        Task<List<Airport>> Airports();
+        Task<List<Route>> Routes();
+        Task<List<string>> RouteFindShortestPath(string origin, string destination);
     }
 }

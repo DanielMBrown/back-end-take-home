@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FlightInformationService.Exceptions;
 using FlightInformationService.Services;
 using GuestlogixBackendTest.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
 
 namespace FlightInformationService.Controllers
 {
@@ -12,32 +16,47 @@ namespace FlightInformationService.Controllers
     [ApiController]
     public class RoutesController : ControllerBase
     {
-
         private readonly IFlightService flightService;
+        private readonly ILogger logger;
 
-        public RoutesController(IFlightService flightService)
+        public RoutesController(IFlightService flightService, ILogger<RoutesController> logger)
         {
             this.flightService = flightService;
+            this.logger = logger;
         }
 
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<Route>))]
-        public async Task<ActionResult<List<Route>>> Routes()
-        {
-            return Ok(await flightService.GetRoutes());
-        }
-
-        [HttpGet("shortestPath",Name = nameof(IFlightService.FindShortestPath))]
+        [HttpGet("shortestPath", Name = nameof(IFlightService.RouteFindShortestPath))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<string>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResult))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResult))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(StatusCodeResult))]
         public async Task<ActionResult<List<string>>> RouteFindShortestPath(string origin, string destination)
         {
             if (string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
             {
-                return BadRequest(new { message = "Unable to determine a route due to one or more missing required parameters." });
+                logger.LogError(ErrorMessages.MissingRequiredParameters);
+                return BadRequest(new { message = ErrorMessages.MissingRequiredParameters });
             }
 
-            return Ok(await flightService.FindShortestPath(origin, destination));
+            try
+            {
+                return Ok(await flightService.RouteFindShortestPath(origin, destination));
+            }
+            catch (InvalidPointException ex)
+            {
+                logger.LogError(ex.Message, ex);
+                return BadRequest(new { message = ex.Message, details = ex.StackTrace });
+            }
+            catch (RouteException ex)
+            {
+                logger.LogError(ex.Message, ex);
+                return NotFound(new { message = ex.Message, details = ex.StackTrace });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ErrorMessages.UnkownError + ex.Message, details = ex.StackTrace });
+            }
         }
     }
 }
