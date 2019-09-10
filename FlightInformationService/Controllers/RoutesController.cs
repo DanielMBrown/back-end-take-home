@@ -25,12 +25,21 @@ namespace FlightInformationService.Controllers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Returns the shortest route between the origin and destination as an array of connecting flights.
+        /// </summary>
+        /// <remarks>
+        /// A shortest route is defined as the route with the fewest connections.
+        /// </remarks>
+        /// <param name="origin">The code for the origin airport</param>
+        /// <param name="destination">The code for the destination airport</param>
+        /// <returns>A list of airport codes</returns>
         [HttpGet("shortestPath", Name = nameof(IFlightService.RouteFindShortestPath))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<string>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResult))]
         [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResult))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(StatusCodeResult))]
-        public async Task<ActionResult<List<string>>> RouteFindShortestPath(string origin, string destination)
+        public async Task<ActionResult<List<string>>> RouteFindShortestPath([FromQuery] string origin, [FromQuery]string destination)
         {
             if (string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
             {
