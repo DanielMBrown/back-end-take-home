@@ -49,7 +49,7 @@ namespace FlightInformationService.Controllers
 
             try
             {
-                return Ok(await flightService.RouteFindShortestPath(origin, destination));
+                return Ok(await flightService.RouteFindShortestPath(origin.Trim(), destination.Trim()));
             }
             catch (InvalidPointException ex)
             {
