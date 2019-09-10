@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FlightInformationService</name>
+    </assembly>
+    <members>
+        <member name="M:FlightInformationService.Controllers.RoutesController.RouteFindShortestPath(System.String,System.String)">
+            <summary>
+            Returns the shortest route between the origin and destination as an array of connecting flights.
+            </summary>
+            <remarks>
+            A shortest route is defined as the route with the fewest connections.
+            </remarks>
+            <param name="origin">The code for the origin airport</param>
+            <param name="destination">The code for the destination airport</param>
+            <returns>A list of airport codes</returns>
+        </member>
+    </members>
+</doc>

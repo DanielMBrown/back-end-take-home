@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace FlightInformationService
 {
@@ -24,14 +27,29 @@ namespace FlightInformationService
             // Need to find a better approach to this, this feels dirty. Ideally load from a database, extra work though.
             var dataService = new DataService();
             dataService.LoadDataFromFile();
-            services.AddSingleton<IDataService>(dataService);
 
-            services.AddTransient<IFlightService, FlightService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Flight Information API", Version = "v1" });
-            });
+            services
+                .AddSingleton<IDataService>(dataService)
+                .AddTransient<IFlightService, FlightService>()
+                .AddSwaggerGen(c =>
+                {
+
+                    try
+                    {
+                        // Get XML Comments file
+                        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
+                        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                        c.IncludeXmlComments(xmlPath);
+                    }
+                    catch (Exception)
+                    {
+                        // Do nothing, comments won't appear in Swagger.
+                    }
+
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Flight Information API", Version = "v1" });
+                })
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
