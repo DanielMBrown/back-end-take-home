@@ -1,4 +1,5 @@
-﻿using FlightInformationService.Models;
+﻿using FlightInformationService.Exceptions;
+using FlightInformationService.Models;
 using GuestlogixBackendTest.Models;
 using System;
 using System.Collections.Generic;
@@ -16,34 +17,34 @@ namespace FlightInformationService.Services
             this.dataService = dataService;
         }
 
-        public async Task<List<Airline>> GetAirlines()
+        public async Task<List<Airline>> Airlines()
         {
             return dataService.Airlines;
         }
 
-        public async Task<List<Airport>> GetAirports()
+        public async Task<List<Airport>> Airports()
         {
             return dataService.Airports;
         }
 
-        public async Task<List<Route>> GetRoutes()
+        public async Task<List<Route>> Routes()
         {
             return dataService.Routes;
         }
 
-        public async Task<List<string>> FindShortestPath(string origin, string destination)
+        public async Task<List<string>> RouteFindShortestPath(string origin, string destination)
         {
             var startingAirport = dataService.Airports.FirstOrDefault(x => x.IATADesignator == origin);
             var endingAirport = dataService.Airports.FirstOrDefault(x => x.IATADesignator == destination);
 
             if (startingAirport is null)
             {
-                throw new Exception($"Invalid Origin - {origin}");
+                throw new InvalidPointException(string.Format(ErrorMessages.OriginNotFound, origin));
             }
 
             if (endingAirport is null)
             {
-                throw new Exception($"Invalid Destination - {destination}");
+                throw new InvalidPointException(string.Format(ErrorMessages.DestinationNotFound, destination));
             }
 
             var graph = GenerateAirportGraph();
@@ -81,7 +82,7 @@ namespace FlightInformationService.Services
             }
             else
             {
-                throw new Exception($"Unable to find a route between {origin} and {destination}");
+                throw new RouteException(string.Format(ErrorMessages.RouteNotFound, origin, destination));
             }
 
             return finalPath.Select(x => x.IATADesignator).ToList();

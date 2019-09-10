@@ -8,6 +8,7 @@ namespace FlightInformationService.Services
 {
     public class DataService : IDataService
     {
+        private const string PathToData = "data/full/{0}";
         public List<Airline> Airlines { get; } = new List<Airline>();
         public List<Airport> Airports { get; } = new List<Airport>();
         public List<Route> Routes { get;} = new List<Route>();
@@ -33,7 +34,7 @@ namespace FlightInformationService.Services
         {
             Airlines.Clear();
 
-            using (var reader = new StreamReader("data/full/airlines.csv"))
+            using (var reader = new StreamReader(string.Format(PathToData, "airlines.csv")))
             using (var csv = new CsvReader(reader))
             {
                 csv.Read();
@@ -57,7 +58,7 @@ namespace FlightInformationService.Services
         {
             Airports.Clear();
 
-            using (var reader = new StreamReader("data/full/airports.csv"))
+            using (var reader = new StreamReader(string.Format(PathToData, "airports.csv")))
             using (var csv = new CsvReader(reader))
             {
                 csv.Read();
@@ -83,7 +84,7 @@ namespace FlightInformationService.Services
         {
             Routes.Clear();
 
-            using (var reader = new StreamReader("data/full/routes.csv"))
+            using (var reader = new StreamReader(string.Format(PathToData, "routes.csv")))
             using (var csv = new CsvReader(reader))
             {
                 csv.Read();
