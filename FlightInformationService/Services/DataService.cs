@@ -8,15 +8,25 @@ namespace FlightInformationService.Services
 {
     public class DataService : IDataService
     {
-        public List<Airline> Airlines { get; private set; } = new List<Airline>();
-        public List<Airport> Airports { get; private set; } = new List<Airport>();
-        public List<Route> Routes { get; private set; } = new List<Route>();
+        public List<Airline> Airlines { get; } = new List<Airline>();
+        public List<Airport> Airports { get; } = new List<Airport>();
+        public List<Route> Routes { get;} = new List<Route>();
 
         public void LoadDataFromFile()
         {
             ParseAirlines();
             ParseAirports();
             ParseRoutes();
+            AssociateRoutesWithAirports();
+        }
+
+        private void AssociateRoutesWithAirports()
+        {
+            foreach(var airport in Airports)
+            {
+                var routes = Routes.FindAll(x => x.Origin.IATADesignator == airport.IATADesignator);
+                airport.Routes = routes;
+            }
         }
 
         private void ParseAirlines()
@@ -30,7 +40,6 @@ namespace FlightInformationService.Services
                 csv.ReadHeader();
                 while (csv.Read())
                 {
-                    // Name,2 Digit Code,3 Digit Code,Country
                     var airline = new Airline
                     {
                         Name = csv.GetField("Name"),
@@ -55,14 +64,14 @@ namespace FlightInformationService.Services
                 csv.ReadHeader();
                 while (csv.Read())
                 {
-                    // Name,City,Country,IATA 3,Latitute,Longitude
                     var airport = new Airport
                     {
                         Name = csv.GetField("Name"),
                         City = csv.GetField("City"),
                         Country = csv.GetField("Country"),
                         IATADesignator = csv.GetField("IATA 3"),
-                        Location = new GeoCoordinatePortable.GeoCoordinate(csv.GetField<double>("Latitute"), csv.GetField<double>("Longitude"))
+                        Latitude = csv.GetField<double>("Latitute"),
+                        Longitude = csv.GetField<double>("Longitude")
                     };
 
                     Airports.Add(airport);
@@ -81,7 +90,6 @@ namespace FlightInformationService.Services
                 csv.ReadHeader();
                 while (csv.Read())
                 {
-                    // Airline Id,Origin,Destination
                     var route = new Route
                     {
                         Airline = Airlines.FirstOrDefault(x => x.IATADesignator == csv.GetField("Airline Id")),

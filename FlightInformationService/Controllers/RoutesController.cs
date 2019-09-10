@@ -27,17 +27,17 @@ namespace FlightInformationService.Controllers
             return Ok(await flightService.GetRoutes());
         }
 
-        [HttpGet("shortestPath",Name = nameof(IFlightService.RouteFindShortestPath))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Route))]
+        [HttpGet("shortestPath",Name = nameof(IFlightService.FindShortestPath))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<string>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResult))]
-        public async Task<ActionResult<Route>> RouteFindShortestPath(string origin, string destination)
+        public async Task<ActionResult<List<string>>> RouteFindShortestPath(string origin, string destination)
         {
             if (string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
             {
                 return BadRequest(new { message = "Unable to determine a route due to one or more missing required parameters." });
             }
 
-            return Ok(await flightService.RouteFindShortestPath(origin, destination));
+            return Ok(await flightService.FindShortestPath(origin, destination));
         }
     }
 }

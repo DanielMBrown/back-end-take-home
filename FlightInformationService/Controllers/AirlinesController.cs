@@ -17,7 +17,6 @@ namespace FlightInformationService.Controllers
             this.flightService = flightService;
         }
 
-        // GET api/values
         [HttpGet]
         public async Task<ActionResult<List<Airline>>> GetAirlines()
         {

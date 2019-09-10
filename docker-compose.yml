@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  flightinformationservice:
+    build:
+      context: .
+      dockerfile: FlightInformationService/Dockerfile
+    ports:
+      - "5000:80"
