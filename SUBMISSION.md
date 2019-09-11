@@ -2,8 +2,6 @@
 
 **I recommend you run the project with Docker**
 
-**Hosted Applicaiton:**
-
 ## Running from Visual Studio
 
 * Open the project in Visual Studio
